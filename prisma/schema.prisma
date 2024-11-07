@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  name      String
+  password  String
+  Formwork  Formwork[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Formwork {
+  id           Int      @id @default(autoincrement())
+  buildingName String
+  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int
+  Zones        Zone[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Zone {
+  id         Int         @id @default(autoincrement())
+  zoneName   String
+  ZoneLevels ZoneLevel[]
+  Formwork   Formwork    @relation(fields: [formworkId], references: [id], onDelete: Cascade)
+  formworkId Int
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model ZoneLevel {
+  id        Int      @id @default(autoincrement())
+  levelName String
+  area      Float
+  height    Float
+  shoring   Float
+  system    String
+  startDate DateTime @db.Date
+  endDate   DateTime @db.Date
+  duration  Int
+  Zone      Zone     @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+  zoneId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
