@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
 import { LoginDto } from './dto/login.dto';
+import { Response as ExpressResponse } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +12,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(loginDto: LoginDto) {
+  async login(loginDto: LoginDto, res: ExpressResponse) {
     const user = await this.prisma.user.findUnique({ where: { email: loginDto.email } });
 
     if (!user) {
@@ -27,9 +28,20 @@ export class AuthService {
     // Create the JWT payload with user ID, email, and role
     const payload = { sub: user.id, email: user.email };
 
-    return {
-      token: this.jwtService.sign(payload),
+    // Generate the token
+    const token = this.jwtService.sign(payload);
+
+    // Set the JWT token as an HTTP-only cookie
+    res.cookie('auth_token', token, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    // Return user details, but not the token in the response body
+    return res.send({
+      message: 'Login successful',
       user: { id: user.id, email: user.email, name: user.name },
-    };
+    });
   }
 }
