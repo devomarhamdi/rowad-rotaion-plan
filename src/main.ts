@@ -11,11 +11,11 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  app.enableCors({ origin: '*' });
+  app.enableCors({ origin: 'http://localhost:3000' });
   // for creating the items master data
   app.use(bodyParser.json({ limit: '50mb' }));
   app.setGlobalPrefix('api/');
   app.use(cookieParser());
-  await app.listen(3000);
+  await app.listen(4000);
 }
 bootstrap();
