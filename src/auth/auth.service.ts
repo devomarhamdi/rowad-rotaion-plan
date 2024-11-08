@@ -42,7 +42,7 @@ export class AuthService {
     // Return user details, but not the token in the response body
     return res.send({
       message: 'Login successful',
-      user: { id: user.id, email: user.email, name: user.name },
+      user: { id: user.id, email: user.email, name: user.name, token },
     });
   }
 }
