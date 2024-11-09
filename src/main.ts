@@ -11,7 +11,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  app.enableCors({ origin: '*', credentials: true });
+  app.enableCors({ origin: 'http://localhost:3000', credentials: true });
   // for creating the items master data
   app.use(bodyParser.json({ limit: '50mb' }));
   app.setGlobalPrefix('api/');
