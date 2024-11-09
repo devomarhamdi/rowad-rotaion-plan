@@ -21,6 +21,11 @@ export class AuthController {
     return this.authService.login(loginDto, res);
   }
 
+  @Post('logout')
+  logout(@Response() res: ExpressResponse) {
+    return res.clearCookie('auth_token').json({ message: 'Logout Successful' });
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
