@@ -54,8 +54,13 @@ export class FormworkService {
       },
       include: {
         Zones: {
+          orderBy: {
+            id: 'asc',
+          },
           include: {
-            ZoneLevels: true,
+            ZoneLevels: {
+              orderBy: { id: 'asc' },
+            },
           },
         },
       },
